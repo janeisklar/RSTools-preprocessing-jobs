@@ -150,6 +150,7 @@
                 <arg name="maxAffineIterations">10000x10000x10000x10000x10000</arg>
                 <arg name="input">${epiRealigned}</arg>
                 <arg name="mean">${epiMeanRealigned}</arg>
+                <arg name="stripskull"/>
             </args>
         </normalization>
         <transformation>
@@ -246,7 +247,7 @@
         <rsmotionscrubbing>
             <description>Compute volumes with severe motion</description>
             <args>
-                <arg name="input">${epiRaw}</arg>
+                <arg name="input">${epiLPI}</arg>
                 <arg name="rp">${realignmentParameters}</arg>
                 <arg name="mask">${brainMaskRaw}</arg>
                 <arg name="dvars">${dvars}</arg>
