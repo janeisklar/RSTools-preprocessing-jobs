@@ -104,7 +104,7 @@
             ${measurement}/mean_tc_wm_wrbuadvols.txt
         </param>
         <param name="wmRegressors">
-            ${measurement}/tc_wm_wrabudvols.txt
+            ${measurement}/tc_wm_wrbuadvols.txt
         </param>
         <param name="globalMeanRegressor">
             ${measurement}/tc_global_wrbuadvols.txt
@@ -289,7 +289,7 @@
             </args>
         </transformation>
         <rsmotionscrubbing>
-            <description>Compute volumes with severe motion</description>
+            <description>Compute volumes with severe motion artifacts</description>
             <args>
                 <arg name="input">${epiLPI}</arg>
                 <arg name="rp">${realignmentParameters}</arg>
