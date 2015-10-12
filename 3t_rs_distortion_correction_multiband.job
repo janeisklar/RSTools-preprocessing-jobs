@@ -164,7 +164,7 @@
             </args>
         </mbslicetiming>
         <distcorrection>
-            <description>Distortion Correction</description>
+            <description>Distortion Correction (Voxel-displacement map)</description>
             <args>
                 <arg name="input">${epiSliceTimed}</arg>
                 <arg name="output">${epiUnwarped}</arg>

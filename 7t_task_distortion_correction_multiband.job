@@ -25,11 +25,8 @@
         <param name="dicom">
             ${measurementRaw}/../dicom
         </param>
-        <param name="vdmRaw">
-            ${measurementRaw}/rvdm.hdr
-        </param>
-        <param name="vdmLPI">
-            ${measurement}/rvdm_LPI.nii
+        <param name="fieldmapLPI">
+            ${measurementRaw}/rfieldmap_LPI.nii
         </param>
         <param name="brainMaskRaw">
             ${measurement}/brainmask.nii
@@ -124,14 +121,6 @@
                 <arg name="phaseencdir">y-</arg>
             </args>
         </rsorientation>
-        <rsorientation>
-            <description>Reorient VDM to LPI</description>
-            <args>
-                <arg name="orientation">LPI</arg>
-                <arg name="output">${vdmLPI}</arg>
-                <arg name="input">${vdmRaw}</arg>
-            </args>
-        </rsorientation>
         <despiking>
             <description>De-spiking</description>
             <args>
@@ -148,15 +137,15 @@
                 <arg name="out">${epiSliceTimed}</arg>
             </args>
         </mbslicetiming>
-        <distcorrection>
-            <description>Distortion Correction</description>
+        <fmdistcorrection>
+            <description>Distortion Correction (Fieldmap)</description>
             <args>
                 <arg name="input">${epiSliceTimed}</arg>
                 <arg name="output">${epiUnwarped}</arg>
-                <arg name="vdm">${vdmLPI}</arg>
+                <arg name="fieldmap">${fieldmapLPI}</arg>
                 <arg name="mean">${epiMeanUnwarped}</arg>
             </args>
-        </distcorrection>
+        </fmdistcorrection>
         <bfcorrection>
             <description>Bias Field Correction</description>
             <args>
