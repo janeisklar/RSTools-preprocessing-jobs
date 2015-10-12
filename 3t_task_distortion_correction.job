@@ -22,6 +22,9 @@
         <param name="epiRaw">
             ${measurementRaw}/vols.nii
         </param>
+        <param name="dicom">
+            ${measurementRaw}/../dicom
+        </param>
         <param name="vdmRaw">
             ${measurementRaw}/rvdm.hdr
         </param>
@@ -108,22 +111,24 @@
         </param>
     </parameters>
     <tasks>
-        <reorientation>
+        <rsorientation>
             <description>Reorient EPI to LPI</description>
             <args>
                 <arg name="orientation">LPI</arg>
                 <arg name="output">${epiLPI}</arg>
                 <arg name="input">${epiRaw}</arg>
+                <arg name="dicom">${dicom}</arg>
+                <arg name="phaseencdir">y-</arg>
             </args>
-        </reorientation>
-        <reorientation>
+        </rsorientation>
+        <rsorientation>
             <description>Reorient VDM to LPI</description>
             <args>
                 <arg name="orientation">LPI</arg>
                 <arg name="output">${vdmLPI}</arg>
                 <arg name="input">${vdmRaw}</arg>
             </args>
-        </reorientation>
+        </rsorientation>
         <despiking>
             <description>De-spiking</description>
             <args>

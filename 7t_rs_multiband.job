@@ -22,6 +22,9 @@
         <param name="epiRaw">
             ${measurementRaw}/vols.nii
         </param>
+        <param name="dicom">
+            ${measurementRaw}/../dicom
+        </param>
         <param name="brainMaskRaw">
             ${measurement}/brainmask.nii
         </param>
@@ -114,14 +117,16 @@
         </param>
     </parameters>
     <tasks>
-        <reorientation>
+        <rsorientation>
             <description>Reorient EPI to LPI</description>
             <args>
                 <arg name="orientation">LPI</arg>
                 <arg name="output">${epiLPI}</arg>
                 <arg name="input">${epiRaw}</arg>
+                <arg name="dicom">${dicom}</arg>
+                <arg name="phaseencdir">y-</arg>
             </args>
-        </reorientation>
+        </rsorientation>
         <despiking>
             <description>De-spiking</description>
             <args>
