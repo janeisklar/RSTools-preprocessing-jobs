@@ -106,9 +106,6 @@
         <param name="regressors">
             ${measurement}/tc_wm_csf_global_rp_wrbuadvols.txt
         </param>
-        <param name="multiBandSliceTiming">
-            ${studyPath}/slice_timing/mb_timing_correction.txt
-        </param>
         <param name="TR">
             1.8
         </param>
@@ -143,7 +140,6 @@
             <description>Slice Timing (Multiband)</description>
             <args>
                 <arg name="in">${epiDespiked}</arg>
-                <arg name="tcustom">${multiBandSliceTiming}</arg>
                 <arg name="mean">${epiMeanSliceTimed}</arg>
                 <arg name="out">${epiSliceTimed}</arg>
             </args>
