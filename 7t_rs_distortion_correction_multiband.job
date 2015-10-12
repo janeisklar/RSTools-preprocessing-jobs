@@ -127,7 +127,7 @@
                 <arg name="output">${epiLPI}</arg>
                 <arg name="input">${epiRaw}</arg>
                 <arg name="dicom">${dicom}</arg>
-                <arg name="phaseencdir">y-</arg>
+                <arg name="phaseencdir">y+</arg>
             </args>
         </rsorientation>
         <despiking>
