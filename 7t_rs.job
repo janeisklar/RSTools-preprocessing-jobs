@@ -278,15 +278,14 @@
                 <arg name="rpformat">fsl</arg>
             </args>
         </rsmotionscrubbing>
-        <smoothing>
+        <rssmoothing>
             <description>Smoothing</description>
             <args>
                 <arg name="kernelSize">6.0</arg>
-                <arg name="brightnessThreshold">40</arg>
                 <arg name="input">${epiNormalized}</arg>
                 <arg name="output">${epiSmoothed}</arg>
             </args>
-        </smoothing>
+        </rssmoothing>
         <rstimecourse>
             <description>Extracting the global mean signal</description>
             <args>
