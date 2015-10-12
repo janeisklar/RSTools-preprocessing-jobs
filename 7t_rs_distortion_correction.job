@@ -377,7 +377,6 @@ ${realignmentParameters}</arg>
                 <arg name="f2">${freqHigh}</arg>
                 <arg name="input">${epiRegressed}</arg>
                 <arg name="filtered">${epiFiltered}</arg>
-                <arg name="TR">${TR}</arg>
             </args>
         </rsbandpass>
         <rsscrubbing>

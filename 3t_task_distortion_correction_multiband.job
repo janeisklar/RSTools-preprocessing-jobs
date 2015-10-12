@@ -106,9 +106,6 @@
         <param name="regressors">
             ${measurement}/tc_wm_csf_global_rp_wrbuadvols.txt
         </param>
-        <param name="TR">
-            1.8
-        </param>
     </parameters>
     <tasks>
         <rsorientation>
