@@ -162,20 +162,17 @@
                 <arg name="output">${epiRealigned}</arg>
             </args>
         </realignment>
-        <normalization>
+        <newnormalization>
             <description>Compute Template Registration</description>
             <args>
                 <arg name="epiTemplate">${epiTemplate}</arg>
                 <arg name="epi2EpiTemplateWarp">${epi2EpiTemplateWarp}</arg>
                 <arg name="epi2EpiTemplateInvWarp">${epi2EpiTemplateInvWarp}</arg>
                 <arg name="epi2EpiTemplateAffine">${epi2EpiTemplateAffine}</arg>
-                <arg name="maxIterations">30x90x20</arg>
-                <arg name="maxAffineIterations">10000x10000x10000x10000x10000</arg>
                 <arg name="input">${epiRealigned}</arg>
                 <arg name="mean">${epiMeanRealigned}</arg>
-                <arg name="stripskull"/>
             </args>
-        </normalization>
+        </newnormalization>
         <transformation>
             <description>Transform EPI to MNI</description>
             <args>
@@ -190,6 +187,7 @@
                 <arg name="epiTemplateWarp">${epiTemplateWarp}</arg>
                 <arg name="epiTemplateInvWarp">${epiTemplateInvWarp}</arg>
                 <arg name="epiTemplateAffine">${epiTemplateAffine}</arg>
+                <arg name="new"/>
             </args>
         </transformation>
         <transformation>
@@ -205,6 +203,7 @@
                 <arg name="epiTemplateWarp">${epiTemplateWarp}</arg>
                 <arg name="epiTemplateInvWarp">${epiTemplateInvWarp}</arg>
                 <arg name="epiTemplateAffine">${epiTemplateAffine}</arg>
+                <arg name="new"/>
             </args>
         </transformation>
         <transformation>
@@ -220,6 +219,7 @@
                 <arg name="epiTemplateWarp">${epiTemplateWarp}</arg>
                 <arg name="epiTemplateInvWarp">${epiTemplateInvWarp}</arg>
                 <arg name="epiTemplateAffine">${epiTemplateAffine}</arg>
+                <arg name="new"/>
             </args>
         </transformation>
         <transformation>
@@ -235,6 +235,7 @@
                 <arg name="epiTemplateWarp">${epiTemplateWarp}</arg>
                 <arg name="epiTemplateInvWarp">${epiTemplateInvWarp}</arg>
                 <arg name="epiTemplateAffine">${epiTemplateAffine}</arg>
+                <arg name="new"/>
             </args>
         </transformation>
         <transformation>
@@ -250,6 +251,7 @@
                 <arg name="epiTemplateWarp">${epiTemplateWarp}</arg>
                 <arg name="epiTemplateInvWarp">${epiTemplateInvWarp}</arg>
                 <arg name="epiTemplateAffine">${epiTemplateAffine}</arg>
+                <arg name="new"/>
             </args>
         </transformation>
         <transformation>
@@ -265,6 +267,7 @@
                 <arg name="epiTemplateWarp">${epiTemplateWarp}</arg>
                 <arg name="epiTemplateInvWarp">${epiTemplateInvWarp}</arg>
                 <arg name="epiTemplateAffine">${epiTemplateAffine}</arg>
+                <arg name="new"/>
             </args>
         </transformation>
         <rsmotionscrubbing>
