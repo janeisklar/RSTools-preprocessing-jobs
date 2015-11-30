@@ -2,7 +2,7 @@
 <job xmlns="http://www.fmri.at/rstools" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.fmri.at/rstools http://www.fmri.at/rstools/job.xsd">
     <parameters>
         <param name="studyPath">
-            /z/fmri/data/clu12/analysis/rs
+            /path/to/study/analysis/rs
         </param>
         <param name="group">
             m1/hc
@@ -28,6 +28,9 @@
         <param name="fieldmapLPI">
             ${measurementRaw}/rfieldmap_LPI.nii
         </param>
+        <param name="vdmLPI">
+            ${measurement}/rvdm_LPI.nii
+        </param>
         <param name="brainMaskRaw">
             ${measurement}/brainmask.nii
         </param>
@@ -43,10 +46,10 @@
         <param name="epiMeanSliceTimed">
             ${measurement}/meanadvols.nii
         </param>
-        <param name="epiUnwarped">
+        <param name="epiDistortionCorrected">
             ${measurement}/uadvols.nii
         </param>
-        <param name="epiMeanUnwarped">
+        <param name="epiMeanDistortionCorrected">
             ${measurement}/meanuadvols.nii
         </param>
         <param name="epiBiasFieldCorrected">
@@ -58,11 +61,17 @@
         <param name="epiMeanRealigned">
             ${measurement}/meanrbuadvols.nii
         </param>
-        <param name="epiNormalized">
-            ${measurement}/wrbuadvols.nii
+        <param name="epiRealignedInterpolated">
+            ${measurement}/irbuadvols.nii
+        </param>
+        <param name="epiMeanRealignedInterpolated">
+            ${measurement}/meanirbuadvols.nii
+        </param>
+        <param name="epiNormalizedInterpolated">
+            ${measurement}/iwrbuadvols.nii
         </param>
         <param name="epiSmoothed">
-            ${measurement}/swrbuadvols.nii
+            ${measurement}/siwrbuadvols.nii
         </param>
         <param name="mniT1EpiSpace">
             ${measurement}/t1_epi_space_MNI.nii
@@ -71,7 +80,7 @@
             ${measurement}/epitpl_epi_space.nii
         </param>
         <param name="realignmentParameters">
-            ${measurement}/rbuadvols.nii.par
+            ${measurement}/rbuadvols.nii.par.txt
         </param>
         <param name="flaggedFrames">
             ${measurement}/ms_flagged.txt
@@ -86,25 +95,25 @@
             ${measurement}/bf.nii
         </param>
         <param name="meanCsfRegressor">
-            ${measurement}/mean_tc_csf_wrbuadvols.txt
+            ${measurement}/mean_tc_csf_iwrbuadvols.txt
         </param>
         <param name="csfRegressors">
-            ${measurement}/tc_csf_wrbuadvols.txt
+            ${measurement}/tc_csf_iwrbuadvols.txt
         </param>
         <param name="meanWmRegressor">
-            ${measurement}/mean_tc_wm_wrbuadvols.txt
+            ${measurement}/mean_tc_iwm_wrbuadvols.txt
         </param>
         <param name="wmRegressors">
-            ${measurement}/tc_wm_wrbuadvols.txt
+            ${measurement}/tc_wm_iwrbuadvols.txt
         </param>
         <param name="globalMeanRegressor">
-            ${measurement}/tc_global_wrbuadvols.txt
+            ${measurement}/tc_global_iwrbuadvols.txt
         </param>
         <param name="regressors">
-            ${measurement}/tc_wm_csf_global_rp_wrbuadvols.txt
+            ${measurement}/tc_wm_csf_global_rp_iwrbuadvols.txt
         </param>
-        <param name="TR">
-            1.4
+        <param name="regressors2">
+            ${measurement}/tc_wm_csf_rp_iwrbuadvols.txt
         </param>
     </parameters>
     <tasks>
@@ -139,17 +148,18 @@
             <description>Distortion Correction (Fieldmap)</description>
             <args>
                 <arg name="input">${epiSliceTimed}</arg>
-                <arg name="output">${epiUnwarped}</arg>
+                <arg name="output">${epiDistortionCorrected}</arg>
                 <arg name="fieldmap">${fieldmapLPI}</arg>
-                <arg name="mean">${epiMeanUnwarped}</arg>
+                <arg name="vdm">${vdmLPI}</arg>
+                <arg name="mean">${epiMeanDistortionCorrected}</arg>
             </args>
         </fmdistcorrection>
         <bfcorrection>
             <description>Bias Field Correction</description>
             <args>
                 <arg name="shrinkfactor">2</arg>
-                <arg name="input">${epiUnwarped}</arg>
-                <arg name="secondaryInput">${epiMeanUnwarped}</arg>
+                <arg name="input">${epiDistortionCorrected}</arg>
+                <arg name="secondaryInput">${epiMeanDistortionCorrected}</arg>
                 <arg name="output">${epiBiasFieldCorrected}</arg>
                 <arg name="bfield">${biasField}</arg>
             </args>
@@ -160,8 +170,21 @@
                 <arg name="stages">4</arg>
                 <arg name="input">${epiBiasFieldCorrected}</arg>
                 <arg name="output">${epiRealigned}</arg>
+                <arg name="mean">${epiMeanRealigned}</arg>
             </args>
         </realignment>
+        <rsapplytransformation>
+            <description>Combined Realignment and Distortion Correction Transformation</description>
+            <args>
+                <arg name="input">${epiSliceTimed}</arg>
+                <arg name="output">${epiRealignedInterpolated}</arg>
+                <arg name="reference">${epiMeanRealigned}</arg>
+                <arg name="headerReference">${epiRealigned}</arg>
+                <arg name="trans">fugue,${vdmLPI}
+div,${biasField}
+mcflirt,${epiRealigned}.mat</arg>
+            </args>
+        </rsapplytransformation>
         <newnormalization>
             <description>Compute Template Registration</description>
             <args>
@@ -169,31 +192,30 @@
                 <arg name="epi2EpiTemplateWarp">${epi2EpiTemplateWarp}</arg>
                 <arg name="epi2EpiTemplateInvWarp">${epi2EpiTemplateInvWarp}</arg>
                 <arg name="epi2EpiTemplateAffine">${epi2EpiTemplateAffine}</arg>
-                <arg name="input">${epiRealigned}</arg>
-                <arg name="mean">${epiMeanRealigned}</arg>
+                <arg name="input">${epiRealignedInterpolated}</arg>
+                <arg name="mean">${epiMeanRealignedInterpolated}</arg>
             </args>
         </newnormalization>
-        <transformation>
+        <rsapplytransformation>
             <description>Transform EPI to MNI</description>
             <args>
-                <arg name="input">${epiRealigned}</arg>
-                <arg name="4dinput"/>
-                <arg name="output">${epiNormalized}</arg>
+                <arg name="input">${epiSliceTimed}</arg>
+                <arg name="output">${epiNormalizedInterpolated}</arg>
                 <arg name="reference">${epiSpaceReference}</arg>
-                <arg name="transformationType">epi2mni</arg>
-                <arg name="epi2EpiTemplateWarp">${epi2EpiTemplateWarp}</arg>
-                <arg name="epi2EpiTemplateInvWarp">${epi2EpiTemplateInvWarp}</arg>
-                <arg name="epi2EpiTemplateAffine">${epi2EpiTemplateAffine}</arg>
-                <arg name="epiTemplateWarp">${epiTemplateWarp}</arg>
-                <arg name="epiTemplateInvWarp">${epiTemplateInvWarp}</arg>
-                <arg name="epiTemplateAffine">${epiTemplateAffine}</arg>
-                <arg name="new"/>
+                <arg name="headerReference">${epiMeanRealignedInterpolated}</arg>
+                <arg name="trans">fugue,${vdmLPI}
+div,${biasField}
+mcflirt,${epiRealigned}.mat
+ants,${epi2EpiTemplateAffine}
+ants,${epi2EpiTemplateWarp}
+ants,${epiTemplateAffine}
+ants,${epiTemplateWarp}</arg>
             </args>
-        </transformation>
+        </rsapplytransformation>
         <transformation>
             <description>Transform mean EPI to MNI</description>
             <args>
-                <arg name="input">${epiMeanRealigned}</arg>
+                <arg name="input">${epiMeanRealignedInterpolated}</arg>
                 <arg name="output">${measurement}/wmeanrbuadvols_mnitpl.nii</arg>
                 <arg name="reference">${mniTemplate}</arg>
                 <arg name="transformationType">epi2mni</arg>
@@ -209,7 +231,7 @@
         <transformation>
             <description>Transform mean EPI to EPI-template space</description>
             <args>
-                <arg name="input">${epiMeanRealigned}</arg>
+                <arg name="input">${epiMeanRealignedInterpolated}</arg>
                 <arg name="output">${measurement}/wmeanrbuadvols_epitpl.nii</arg>
                 <arg name="reference">${epiTemplate}</arg>
                 <arg name="transformationType">epi2epitpl</arg>
@@ -227,7 +249,7 @@
             <args>
                 <arg name="input">${epiTemplate}</arg>
                 <arg name="output">${epiTplEpiSpace}</arg>
-                <arg name="reference">${epiMeanRealigned}</arg>
+                <arg name="reference">${epiMeanRealignedInterpolated}</arg>
                 <arg name="transformationType">epitpl2epi</arg>
                 <arg name="epi2EpiTemplateWarp">${epi2EpiTemplateWarp}</arg>
                 <arg name="epi2EpiTemplateInvWarp">${epi2EpiTemplateInvWarp}</arg>
@@ -243,7 +265,7 @@
             <args>
                 <arg name="input">${mniTemplate}</arg>
                 <arg name="output">${mniT1EpiSpace}</arg>
-                <arg name="reference">${epiMeanRealigned}</arg>
+                <arg name="reference">${epiMeanRealignedInterpolated}</arg>
                 <arg name="transformationType">mni2epi</arg>
                 <arg name="epi2EpiTemplateWarp">${epi2EpiTemplateWarp}</arg>
                 <arg name="epi2EpiTemplateInvWarp">${epi2EpiTemplateInvWarp}</arg>
@@ -259,7 +281,7 @@
             <args>
                 <arg name="input">${brainMask}</arg>
                 <arg name="output">${brainMaskRaw}</arg>
-                <arg name="reference">${epiMeanRealigned}</arg>
+                <arg name="reference">${epiMeanRealignedInterpolated}</arg>
                 <arg name="transformationType">mni2epi</arg>
                 <arg name="epi2EpiTemplateWarp">${epi2EpiTemplateWarp}</arg>
                 <arg name="epi2EpiTemplateInvWarp">${epi2EpiTemplateInvWarp}</arg>
@@ -288,7 +310,7 @@
             <description>Smoothing</description>
             <args>
                 <arg name="kernelSize">6.0</arg>
-                <arg name="input">${epiNormalized}</arg>
+                <arg name="input">${epiNormalizedInterpolated}</arg>
                 <arg name="output">${epiSmoothed}</arg>
             </args>
         </rssmoothing>
@@ -296,7 +318,7 @@
             <description>Extracting the global mean signal</description>
             <args>
                 <arg name="mask">${brainMask}</arg>
-                <arg name="input">${epiNormalized}</arg>
+                <arg name="input">${epiNormalizedInterpolated}</arg>
                 <arg name="output">${globalMeanRegressor}</arg>
             </args>
         </rstimecourse>
@@ -304,7 +326,7 @@
             <description>Extracting the mean CSF signal</description>
             <args>
                 <arg name="mask">${csfMask}</arg>
-                <arg name="input">${epiNormalized}</arg>
+                <arg name="input">${epiNormalizedInterpolated}</arg>
                 <arg name="output">${meanCsfRegressor}</arg>
             </args>
         </rstimecourse>
@@ -312,7 +334,7 @@
             <description>Extracting the mean WM signal</description>
             <args>
                 <arg name="mask">${wmMask}</arg>
-                <arg name="input">${epiNormalized}</arg>
+                <arg name="input">${epiNormalizedInterpolated}</arg>
                 <arg name="output">${meanWmRegressor}</arg>
             </args>
         </rstimecourse>
@@ -320,7 +342,7 @@
             <description>Extracting the first 5 PCA-components of the CSF signal</description>
             <args>
                 <arg name="mask">${csfMask}</arg>
-                <arg name="input">${epiNormalized}</arg>
+                <arg name="input">${epiNormalizedInterpolated}</arg>
                 <arg name="output">${csfRegressors}</arg>
                 <arg name="algorithm">tpca</arg>
                 <arg name="retainComponents">5</arg>
@@ -331,7 +353,7 @@
             <description>Extracting the first 5 PCA-components of the WM signal</description>
             <args>
                 <arg name="mask">${wmMask}</arg>
-                <arg name="input">${epiNormalized}</arg>
+                <arg name="input">${epiNormalizedInterpolated}</arg>
                 <arg name="output">${wmRegressors}</arg>
                 <arg name="algorithm">tpca</arg>
                 <arg name="retainComponents">5</arg>
@@ -348,6 +370,17 @@ ${meanWmRegressor}
 ${wmRegressors}
 ${realignmentParameters}</arg>
                 <arg name="output">${regressors}</arg>
+            </args>
+        </regressors>
+        <regressors>
+            <description>Merging all regressors (excl. global mean) into one file</description>
+            <args>
+                <arg name="input">${meanCsfRegressor}
+${csfRegressors}
+${meanWmRegressor}
+${wmRegressors}
+${realignmentParameters}</arg>
+                <arg name="output">${regressors2}</arg>
             </args>
         </regressors>
     </tasks>
