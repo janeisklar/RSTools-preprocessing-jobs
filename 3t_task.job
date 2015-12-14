@@ -186,6 +186,7 @@ ants,${epi2EpiTemplateAffine}
 ants,${epi2EpiTemplateWarp}
 ants,${epiTemplateAffine}
 ants,${epiTemplateWarp}</arg>
+                <arg name="space">mni</arg>
             </args>
         </rsapplytransformation>
         <transformation>
