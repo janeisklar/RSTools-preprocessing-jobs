@@ -160,6 +160,7 @@
                 <arg name="headerReference">${epiRealigned}</arg>
                 <arg name="trans">div,${biasField}
 mcflirt,${epiRealigned}.mat</arg>
+                <arg name="defaultValue">0.0</arg>
             </args>
         </rsapplytransformation>
         <newnormalization>
@@ -187,6 +188,7 @@ ants,${epi2EpiTemplateWarp}
 ants,${epiTemplateAffine}
 ants,${epiTemplateWarp}</arg>
                 <arg name="space">mni</arg>
+                <arg name="defaultValue">0.0</arg>
             </args>
         </rsapplytransformation>
         <transformation>
