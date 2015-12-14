@@ -8,7 +8,7 @@
             m1/hc
         </param>
         <param name="scanner">
-            7t
+            7tu
         </param>
         <param name="subjectsPath">
             ${studyPath}/subjects/${group}
